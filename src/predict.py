@@ -6,6 +6,7 @@ from typing_extensions import Annotated
 from pathlib import Path
 from urllib.parse import urlparse
 from src.data import preprocess, get_index_to_class_map
+from src.config import MLFLOW_TRACKING_URI
 
 app = typer.Typer()
 
@@ -42,6 +43,7 @@ def predict_proba(ds, predictor):
     return results
 
 def get_mlflow_checkpoint(run_id):
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     artifact_dir = urlparse(mlflow.get_run(run_id).info.artifact_uri).path
     checkpoint = str(Path(f"{artifact_dir}/model/model.pkl").absolute())
     return checkpoint

@@ -1,4 +1,5 @@
 import typer
+import mlflow
 from typing_extensions import Annotated
 from src.data import load_data, preprocess
 from src import predict
@@ -10,9 +11,8 @@ app = typer.Typer()
 
 @app.command()
 def evaluate(run_id : Annotated[str, typer.Option(help='name of the experiment for this training workload')],
-             results_fp : Annotated[str, typer.Option(help='file path to store evaluation results')],
+             results_fp : Annotated[str, typer.Option(help='file path to store evaluation results')] = None,
              ):
-    
     data = load_data()
     ds = data['data']
     ds = preprocess(ds)
@@ -25,7 +25,7 @@ def evaluate(run_id : Annotated[str, typer.Option(help='name of the experiment f
 
     if results_fp:  # pragma: no cover, saving results
         utils.save_dict(d=performance, path=results_fp)
-
+    print(performance)
     return performance
     
 if __name__ == "__main__":
